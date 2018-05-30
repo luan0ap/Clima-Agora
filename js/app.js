@@ -1,24 +1,16 @@
-document.querySelector(".form-city").addEventListener("submit", function(e){
+document.querySelector('.form-city').addEventListener('submit', function(e){
     e.preventDefault();
 
-    let city = document.querySelector(".city").value;
+    let city = document.querySelector('[data-input="city"]').value;
 
     fetchCity(city);
 });
 
 async function fetchCity(cityName){
 
-    const key = "ce5db2f0f4a2dc4ed7734ed23cc9f179";
-    const URL = 'https://api.openweathermap.org/data/2.5/weather?q='+cityName+'&APPID='+key;
-    const URLForecast = 'https://api.openweathermap.org/data/2.5/forecast?q='+cityName+'&APPID='+key;
-    const myHeaders = new Headers();
-
-    const myInit = {
-        method: 'GET',
-        headers: myHeaders,
-        mode: 'cors',
-        cache: 'default' 
-    };
+    const key = 'ce5db2f0f4a2dc4ed7734ed23cc9f179';
+    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${KEY}`;
+    const URLForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&APPID=${key}`;
 
     try {
         let dados = Promise.all([
@@ -39,17 +31,15 @@ async function fetchCity(cityName){
 }catch(error) {
         
    
-        console.log(error);
-        alert("you've met with a terrible Error, haven't you?");
-        
+        console.log(error);        
     }
 }
 
 function manipularDados(data){
 
-    document.querySelector(".temperature").textContent = ((data.main.temp - 273).toFixed(0));
+    document.querySelector('[data-js="temperature"]').textContent = ((data.main.temp - 273).toFixed(0));
 
-    let weather = document.querySelector(".weather");
+    let weather = document.querySelector('[data-js="weather"]');
     weather.innerHTML = weatherId(data.weather[0].id);
 
 }
@@ -146,14 +136,14 @@ function weatherId (id) {
        
 function forecast(arrayForecast){
 
-    const weekDays = ["Domingo","Segunda-Feira","Terça-Feira","Quarta-Feira","Quinta-Feira","Sexta-Feira","Sábado"];
-    const firstForecastSpan = document.querySelector(".first-forecast-day");
-    const lastForecastSpan = document.querySelector(".last-forecast-day");
+    const weekDays = ['Domingo','Segunda-Feira','Terça-Feira','Quarta-Feira','Quinta-Feira','Sexta-Feira','Sábado'];
+    const firstForecastSpan = document.querySelector('[data-js="first-forecast-day"]');
+    const lastForecastSpan = document.querySelector('[data-js="last-forecast-day"]');
 
-    const firstTempForecast = document.querySelector(".first-temp-forecast");
-    const lastTempForecast = document.querySelector(".last-temp-forecast");
-    const firstWeatherForecast = document.querySelector(".first-weather-forecast");
-    const lastWeatherForecast = document.querySelector(".last-weather-forecast");
+    const firstTempForecast = document.querySelector('[data-js="first-temp-forecast"]');
+    const lastTempForecast = document.querySelector('data-js="last-temp-forecast"');
+    const firstWeatherForecast = document.querySelector('data-js="first-weather-forecast"');
+    const lastWeatherForecast = document.querySelector('data-js="last-weather-forecast"');
     let currentDay = new Date().getDay();
 
 
@@ -175,9 +165,9 @@ function forecast(arrayForecast){
     }
 
     firstTempForecast.innerHTML = ((arrayForecast.list[4].main.temp - 273).toFixed(0));
-    firstWeatherForecast.innerHTML  = weatherId(arrayForecast.list[4].weather["0"].id);
+    firstWeatherForecast.innerHTML  = weatherId(arrayForecast.list[4].weather['0'].id);
     
     lastTempForecast.innerHTML = ((arrayForecast.list[12].main.temp - 273).toFixed(0));
-    lastWeatherForecast.innerHTML  = weatherId(arrayForecast.list[12].weather["0"].id);
+    lastWeatherForecast.innerHTML  = weatherId(arrayForecast.list[12].weather['0'].id);
 
 }

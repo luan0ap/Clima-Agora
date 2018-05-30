@@ -1,38 +1,99 @@
-document.querySelector('.form-city').addEventListener('submit', function(e){
-    e.preventDefault();
 
-    const $inputCity = document.querySelector('[data-input="city"]');
+const weatherId  = () => ({
+    
+    200: 'Trovoada com chuva leve',
+    201: 'Trovoada com chuva',
+    202: 'Trovoada com chuva pesada',
+    210: 'Trovoada leve',
+    211: 'Trovoada',
+    212: 'Trovoada pesada',
+    221: 'Tempestade Irregular',
+    230: 'Tempestade Leve',
+    231: 'Chuvisco com trovoadas',
+    232: 'Tempestade pesada',
 
-    fetchCity($inputCity.value);
-});
+    300: 'Chuvisco leve',
+    301: 'Chuvisco',
+    302: 'Chuvisco mais intenso',
+    310: 'Chuvisco mais leve',
+    311: 'Pancadas de chuva',
+    312: 'Pancadas de chuva intensa',
+    313: 'Pancadas de chuva intensa',
+    314: 'Pancadas de chuva intensa',
+    321: 'Pancadas de chuva leve',
 
-async function fetchCity(cityName){
+    500: 'Chuva leve',
+    501: 'Chuva Moderada',
+    502: 'Chuva Intensa',
+    503: 'Chuva muito intensa',
+    504: 'Chuva pesada',
+    511: 'Chuva com risco de neve',
+    520: 'Chuva de leve intensidade',
+    521: 'Chuva rápida',
+    522: 'Chuva rápida e intensa',
+    531: 'Chuva rápida',
+
+    600: 'Pouca neve',
+    601: 'Neve',
+    602: 'Neve pesada',
+    611: 'Granizo',
+    612: 'Granizo',
+    615: 'Chuva rápida e neve',
+    616: 'Chuva e neve',
+    620: 'Risco de neve',
+    621: 'Neve rápida',
+    622: 'Neve Pesada',
+
+    701: 'Névoa',
+    711: 'Fumaça',
+    721: 'Neblina',
+    731: 'Redemoinho de poeira',
+    741: 'Névoa',
+    751: 'Areia',
+    761: 'Poeira',
+    762: 'Cinza Vulcânica',
+    771: 'Rajadas de vento',
+    781: 'Tornado',
+
+    800: 'Céu limpo',
+    801: 'Poucas nuvens',
+    802: 'Nuvens dispersas',
+    803: 'Nuvens quebradas',
+    804: 'Nublado',
+
+    900: 'Tornado',
+    901: 'Chuva Tropical',
+    902: 'Furacão',
+    903: 'Frio',
+    904: 'Calor',
+    905: 'Ventania',
+    906: 'Granizo',
+    951: 'Calmo',
+    952: 'Brisa leve',
+    953: 'Brisa suave',
+    954: 'Brisa moderada',
+    955: 'Brisa fresca',
+    956: 'Ventania forte',
+    957: 'Ventania muito forte',
+    958: 'Vendaval',
+    959: 'Vendaval forte',
+    960: 'Tempestade',
+    961: 'Tempestade violenta',
+    962: 'Furacão'
+
+})
+
+const get = (url, cb) => fetch(url).then(resp => resp.json()).then(cb)
+
+
+const fetchCity = async (cityName) => {
 
     const KEY = 'ce5db2f0f4a2dc4ed7734ed23cc9f179';
     const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${KEY}`;
     const URLForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&APPID=${KEY}`;
 
-    try {
-        let dados = Promise.all([
-
-            fetch(URL, myInit)
-            .then((resp) => resp.json())
-            .then(function (data) {
-                manipularDados(data);
-            }),
-
-            fetch(URLForecast, myInit)
-            .then((resp) => resp.json())
-            .then(function (data) {
-                forecast(data);
-            })
-        ])
-    
-}catch(error) {
-        
-   
-        console.log(error);        
-    }
+    await get(URL, manipularDados)
+    await get(URLForecast, forecast)
 }
 
 function manipularDados(data){
@@ -40,99 +101,9 @@ function manipularDados(data){
     document.querySelector('[data-js="temperature"]').textContent = ((data.main.temp - 273).toFixed(0));
 
     const $weather = document.querySelector('[data-js="weather"]');
-    weather.innerHTML = weatherId(data.weather[0].id);
+    $weather.innerHTML = weatherId()[data.weather[0].id];
 
 }
-
-
-function weatherId (id) {
-
-    let weatherConditions = {
-    
-        200: 'Trovoada com chuva leve',
-        201: 'Trovoada com chuva',
-        202: 'Trovoada com chuva pesada',
-        210: 'Trovoada leve',
-        211: 'Trovoada',
-        212: 'Trovoada pesada',
-        221: 'Tempestade Irregular',
-        230: 'Tempestade Leve',
-        231: 'Chuvisco com trovoadas',
-        232: 'Tempestade pesada',
-
-        300: 'Chuvisco leve',
-        301: 'Chuvisco',
-        302: 'Chuvisco mais intenso',
-        310: 'Chuvisco mais leve',
-        311: 'Pancadas de chuva',
-        312: 'Pancadas de chuva intensa',
-        313: 'Pancadas de chuva intensa',
-        314: 'Pancadas de chuva intensa',
-        321: 'Pancadas de chuva leve',
-
-        500: 'Chuva leve',
-        501: 'Chuva Moderada',
-        502: 'Chuva Intensa',
-        503: 'Chuva muito intensa',
-        504: 'Chuva pesada',
-        511: 'Chuva com risco de neve',
-        520: 'Chuva de leve intensidade',
-        521: 'Chuva rápida',
-        522: 'Chuva rápida e intensa',
-        531: 'Chuva rápida',
-
-        600: 'Pouca neve',
-        601: 'Neve',
-        602: 'Neve pesada',
-        611: 'Granizo',
-        612: 'Granizo',
-        615: 'Chuva rápida e neve',
-        616: 'Chuva e neve',
-        620: 'Risco de neve',
-        621: 'Neve rápida',
-        622: 'Neve Pesada',
-
-        701: 'Névoa',
-        711: 'Fumaça',
-        721: 'Neblina',
-        731: 'Redemoinho de poeira',
-        741: 'Névoa',
-        751: 'Areia',
-        761: 'Poeira',
-        762: 'Cinza Vulcânica',
-        771: 'Rajadas de vento',
-        781: 'Tornado',
-
-        800: 'Céu limpo',
-        801: 'Poucas nuvens',
-        802: 'Nuvens dispersas',
-        803: 'Nuvens quebradas',
-        804: 'Nublado',
-
-        900: 'Tornado',
-        901: 'Chuva Tropical',
-        902: 'Furacão',
-        903: 'Frio',
-        904: 'Calor',
-        905: 'Ventania',
-        906: 'Granizo',
-        951: 'Calmo',
-        952: 'Brisa leve',
-        953: 'Brisa suave',
-        954: 'Brisa moderada',
-        955: 'Brisa fresca',
-        956: 'Ventania forte',
-        957: 'Ventania muito forte',
-        958: 'Vendaval',
-        959: 'Vendaval forte',
-        960: 'Tempestade',
-        961: 'Tempestade violenta',
-        962: 'Furacão'
-
-        }
-
-        return weatherConditions[id];
-       }
        
 function forecast(arrayForecast){
 
@@ -141,9 +112,9 @@ function forecast(arrayForecast){
     const $lastForecastSpan = document.querySelector('[data-js="last-forecast-day"]');
 
     const $firstTempForecast = document.querySelector('[data-js="first-temp-forecast"]');
-    const $$lastTempForecast = document.querySelector('data-js="last-temp-forecast"');
-    const $firstWeatherForecast = document.querySelector('data-js="first-weather-forecast"');
-    const $lastWeatherForecast = document.querySelector('data-js="last-weather-forecast"');
+    const $lastTempForecast = document.querySelector('[data-js="last-temp-forecast"]');
+    const $firstWeatherForecast = document.querySelector('[data-js="first-weather-forecast"]');
+    const $lastWeatherForecast = document.querySelector('[data-js="last-weather-forecast"]');
     let currentDay = new Date().getDay();
 
 
@@ -165,9 +136,17 @@ function forecast(arrayForecast){
     }
 
     $firstTempForecast.innerHTML = ((arrayForecast.list[4].main.temp - 273).toFixed(0));
-    $firstWeatherForecast.innerHTML  = weatherId(arrayForecast.list[4].weather['0'].id);
+    $firstWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[4].weather['0'].id];
     
     $lastTempForecast.innerHTML = ((arrayForecast.list[12].main.temp - 273).toFixed(0));
-    $lastWeatherForecast.innerHTML  = weatherId(arrayForecast.list[12].weather['0'].id);
+    $lastWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[12].weather['0'].id];
 
 }
+
+document.querySelector('.form-city').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const $inputCity = document.querySelector('[data-js="input-city"]');
+
+    fetchCity($inputCity.value);
+});

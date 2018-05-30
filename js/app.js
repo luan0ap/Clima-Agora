@@ -1,4 +1,3 @@
-
 const weatherId  = () => ({
     
     200: 'Trovoada com chuva leve',
@@ -85,68 +84,72 @@ const weatherId  = () => ({
 
 const get = (url, cb) => fetch(url).then(resp => resp.json()).then(cb)
 
+const kelvinToCelsius = kelvin => Math.floor(kelvin - 273).toFixed(0)
+
+const insertContent = $elm => content => $elm.innerHTML = content
 
 const fetchCity = async (cityName) => {
 
-    const KEY = 'ce5db2f0f4a2dc4ed7734ed23cc9f179';
-    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${KEY}`;
-    const URLForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&APPID=${KEY}`;
+    const KEY = 'ce5db2f0f4a2dc4ed7734ed23cc9f179'
+    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${KEY}`
+    const URLForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&APPID=${KEY}`
 
     await get(URL, manipularDados)
     await get(URLForecast, forecast)
 }
 
-function manipularDados(data){
+const manipularDados = (data) => {
+    const $temperature = document.querySelector('[data-js="temperature"]')
+    const $weather = document.querySelector('[data-js="weather"]')
+    const getTemperatureID = weatherId()[data.weather[0].id]
 
-    document.querySelector('[data-js="temperature"]').textContent = ((data.main.temp - 273).toFixed(0));
-
-    const $weather = document.querySelector('[data-js="weather"]');
-    $weather.innerHTML = weatherId()[data.weather[0].id];
+    insertContent($temperature)(kelvinToCelsius(data.main.temp))
+    insertContent($weather)(getTemperatureID)
 
 }
        
-function forecast(arrayForecast){
+const forecast = (arrayForecast) => {
 
-    const weekDays = ['Domingo','Segunda-Feira','Terça-Feira','Quarta-Feira','Quinta-Feira','Sexta-Feira','Sábado'];
-    const $firstForecastSpan = document.querySelector('[data-js="first-forecast-day"]');
-    const $lastForecastSpan = document.querySelector('[data-js="last-forecast-day"]');
+    const weekDays = ['Domingo','Segunda-Feira','Terça-Feira','Quarta-Feira','Quinta-Feira','Sexta-Feira','Sábado']
+    const $firstForecastSpan = document.querySelector('[data-js="first-forecast-day"]')
+    const $lastForecastSpan = document.querySelector('[data-js="last-forecast-day"]')
 
-    const $firstTempForecast = document.querySelector('[data-js="first-temp-forecast"]');
-    const $lastTempForecast = document.querySelector('[data-js="last-temp-forecast"]');
-    const $firstWeatherForecast = document.querySelector('[data-js="first-weather-forecast"]');
-    const $lastWeatherForecast = document.querySelector('[data-js="last-weather-forecast"]');
-    let currentDay = new Date().getDay();
+    const $firstTempForecast = document.querySelector('[data-js="first-temp-forecast"]')
+    const $lastTempForecast = document.querySelector('[data-js="last-temp-forecast"]')
+    const $firstWeatherForecast = document.querySelector('[data-js="first-weather-forecast"]')
+    const $lastWeatherForecast = document.querySelector('[data-js="last-weather-forecast"]')
+    let currentDay = new Date().getDay()
 
 
     switch(currentDay){
 
         case 5:
-            $firstForecastSpan.innerHTML = weekDays[currentDay+1];
-            $lastForecastSpan.innerHTML = weekDays[0];
-            break;
+            $firstForecastSpan.innerHTML = weekDays[currentDay+1]
+            $lastForecastSpan.innerHTML = weekDays[0]
+            break
 
         case 6:
-            $firstForecastSpan.innerHTML = weekDays[0];
-            $lastForecastSpan.innerHTML = weekDays[1];
-            break;
+            $firstForecastSpan.innerHTML = weekDays[0]
+            $lastForecastSpan.innerHTML = weekDays[1]
+            break
 
         default:
-            $firstForecastSpan.innerHTML = weekDays[currentDay+1];
-            $lastForecastSpan.innerHTML = weekDays[currentDay+2];
+            $firstForecastSpan.innerHTML = weekDays[currentDay+1]
+            $lastForecastSpan.innerHTML = weekDays[currentDay+2]
     }
 
-    $firstTempForecast.innerHTML = ((arrayForecast.list[4].main.temp - 273).toFixed(0));
-    $firstWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[4].weather['0'].id];
+    $firstTempForecast.innerHTML = ((arrayForecast.list[4].main.temp - 273).toFixed(0))
+    $firstWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[4].weather['0'].id]
     
-    $lastTempForecast.innerHTML = ((arrayForecast.list[12].main.temp - 273).toFixed(0));
-    $lastWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[12].weather['0'].id];
+    $lastTempForecast.innerHTML = ((arrayForecast.list[12].main.temp - 273).toFixed(0))
+    $lastWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[12].weather['0'].id]
 
 }
 
 document.querySelector('.form-city').addEventListener('submit', function(e){
-    e.preventDefault();
+    e.preventDefault()
 
-    const $inputCity = document.querySelector('[data-js="input-city"]');
+    const $inputCity = document.querySelector('[data-js="input-city"]')
 
-    fetchCity($inputCity.value);
-});
+    fetchCity($inputCity.value)
+})

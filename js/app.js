@@ -82,6 +82,16 @@ const weatherId  = () => ({
 
 })
 
+// Retorna o dia atual se passado nenhum parametro
+// aceita nameros como parametro cada numero inserido será somado em relação ao dia de hoje
+// Ex: currentDay(1) - retorna sabado caso hoje for sexta
+
+const currentDay = (num = 0) => {
+    const weekDays = ['Domingo','Segunda-Feira','Terça-Feira','Quarta-Feira','Quinta-Feira','Sexta-Feira','Sábado']
+    const currentDay = new Date().getDay()
+    return weekDays[currentDay + num] || weekDays[currentDay]
+}
+
 const get = (url, cb) => fetch(url).then(resp => resp.json()).then(cb)
 
 const kelvinToCelsius = kelvin => Math.floor(kelvin - 273).toFixed(0)
@@ -93,7 +103,6 @@ const fetchCity = async (cityName) => {
     const KEY = 'ce5db2f0f4a2dc4ed7734ed23cc9f179'
     const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${KEY}`
     const URLForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&APPID=${KEY}`
-
     await get(URL, manipularDados)
     await get(URLForecast, forecast)
 }
@@ -105,44 +114,26 @@ const manipularDados = (data) => {
 
     insertContent($temperature)(kelvinToCelsius(data.main.temp))
     insertContent($weather)(getTemperatureID)
-
 }
        
 const forecast = (arrayForecast) => {
 
-    const weekDays = ['Domingo','Segunda-Feira','Terça-Feira','Quarta-Feira','Quinta-Feira','Sexta-Feira','Sábado']
-    const $firstForecastSpan = document.querySelector('[data-js="first-forecast-day"]')
-    const $lastForecastSpan = document.querySelector('[data-js="last-forecast-day"]')
+    const $dayNameTomorrow = document.querySelector('[data-js="first-forecast-day"]')
+    const $dayNameAfterTomorrow = document.querySelector('[data-js="last-forecast-day"]')
 
-    const $firstTempForecast = document.querySelector('[data-js="first-temp-forecast"]')
-    const $lastTempForecast = document.querySelector('[data-js="last-temp-forecast"]')
-    const $firstWeatherForecast = document.querySelector('[data-js="first-weather-forecast"]')
-    const $lastWeatherForecast = document.querySelector('[data-js="last-weather-forecast"]')
-    let currentDay = new Date().getDay()
+    const $forecastTomorrow = document.querySelector('[data-js="first-temp-forecast"]')
+    const $forecastAfterTomorrow = document.querySelector('[data-js="last-temp-forecast"]')
+    const $forecastWeatherTomorrow = document.querySelector('[data-js="first-weather-forecast"]')
+    const $forecastWeatherAfterTomorrow = document.querySelector('[data-js="last-weather-forecast"]')
 
-
-    switch(currentDay){
-
-        case 5:
-            $firstForecastSpan.innerHTML = weekDays[currentDay+1]
-            $lastForecastSpan.innerHTML = weekDays[0]
-            break
-
-        case 6:
-            $firstForecastSpan.innerHTML = weekDays[0]
-            $lastForecastSpan.innerHTML = weekDays[1]
-            break
-
-        default:
-            $firstForecastSpan.innerHTML = weekDays[currentDay+1]
-            $lastForecastSpan.innerHTML = weekDays[currentDay+2]
-    }
-
-    $firstTempForecast.innerHTML = ((arrayForecast.list[4].main.temp - 273).toFixed(0))
-    $firstWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[4].weather['0'].id]
+    $dayNameTomorrow.innerHTML = currentDay(1)
+    $dayNameAfterTomorrow.innerHTML = currentDay(2)
     
-    $lastTempForecast.innerHTML = ((arrayForecast.list[12].main.temp - 273).toFixed(0))
-    $lastWeatherForecast.innerHTML  = weatherId()[arrayForecast.list[12].weather['0'].id]
+    $forecastTomorrow.innerHTML = kelvinToCelsius(arrayForecast.list[4].main.temp)
+    $forecastWeatherTomorrow.innerHTML = weatherId()[arrayForecast.list[4].weather['0'].id]
+    
+    $forecastAfterTomorrow.innerHTML = kelvinToCelsius(arrayForecast.list[12].main.temp)
+    $forecastWeatherAfterTomorrow.innerHTML  = weatherId()[arrayForecast.list[12].weather['0'].id]
 
 }
 

@@ -126,14 +126,20 @@ const forecast = (arrayForecast) => {
     const $forecastWeatherTomorrow = document.querySelector('[data-js="first-weather-forecast"]')
     const $forecastWeatherAfterTomorrow = document.querySelector('[data-js="last-weather-forecast"]')
 
-    $dayNameTomorrow.innerHTML = currentDay(1)
-    $dayNameAfterTomorrow.innerHTML = currentDay(2)
+    // Nome do dia da semana: amanha e depois
+
+    insertContent($dayNameTomorrow)(currentDay(1))
+    insertContent($dayNameAfterTomorrow)(currentDay(2))
     
-    $forecastTomorrow.innerHTML = kelvinToCelsius(arrayForecast.list[4].main.temp)
-    $forecastWeatherTomorrow.innerHTML = weatherId()[arrayForecast.list[4].weather['0'].id]
+    // Previsao do tempo para amanha
+
+    insertContent($forecastTomorrow)(kelvinToCelsius(arrayForecast.list[4].main.temp))
+    insertContent($forecastWeatherTomorrow)(weatherId()[arrayForecast.list[4].weather['0'].id])
     
-    $forecastAfterTomorrow.innerHTML = kelvinToCelsius(arrayForecast.list[12].main.temp)
-    $forecastWeatherAfterTomorrow.innerHTML  = weatherId()[arrayForecast.list[12].weather['0'].id]
+    // Previsao do tempo para depois de amanhã
+
+    insertContent($forecastAfterTomorrow)(kelvinToCelsius(arrayForecast.list[12].main.temp))
+    insertContent($forecastWeatherAfterTomorrow)(weatherId()[arrayForecast.list[12].weather['0'].id]) 
 
 }
 

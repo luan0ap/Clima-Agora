@@ -89,7 +89,7 @@ const weatherId  = () => ({
 const currentDay = (num = 0) => {
     const weekDays = ['Domingo','Segunda-Feira','Terça-Feira','Quarta-Feira','Quinta-Feira','Sexta-Feira','Sábado']
     const currentDay = new Date().getDay()
-    return weekDays[currentDay + num] || weekDays[currentDay]
+    return weekDays[currentDay + num]
 }
 
 const get = (url, cb) => fetch(url).then(resp => resp.json()).then(cb)
